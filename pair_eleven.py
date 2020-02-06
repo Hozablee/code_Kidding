@@ -7,6 +7,6 @@ def pair_eleven(li1):
         j=j+1
 
 if __name__ == "__main__":
-    pair_eleven([1,10,10,10,10])
+    pair_eleven([9,8,0,2,3])
             
             
