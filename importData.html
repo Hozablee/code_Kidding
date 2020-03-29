@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Import Data From Excel</title>
+
+    <!-- Ignite UI Required Combined CSS Files -->
+    <link href="http://staging.igniteui.local/15-2/IgniteUI/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
+    <link href="http://staging.igniteui.local/15-2/IgniteUI/css/structure/infragistics.css" rel="stylesheet" />
+
+    <script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+
+    <!-- Ignite UI Required Combined JavaScript Files -->
+    <script src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/infragistics.core.js"></script>
+    <script src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/infragistics.lob.js"></script>
+    <!-- External files for exporting -->
+    <script src="https://www.igniteui.com/js/external/FileSaver.js"></script>
+    <script src="https://www.igniteui.com/js/external/Blob.js"></script>
+
+    <!-- Javascript Excel Library -->
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_core.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_collections.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_text.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_io.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_ui.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.documents.core_core.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_collectionsextended.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.excel_core.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_threading.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.ext_web.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.xml.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.documents.core_openxml.js"></script>
+    <script type="text/javascript" src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/modules/infragistics.excel_serialization_openxml.js"></script>
+
+
+    <style>
+        input.button-style {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <span>
+            <a href="http://staging.igniteui.local/15-2/HtmlSamples/javascript-excel-library/report.xlsx" download>1. Download this sample Excel file</a>
+        </span><br />
+        <span>2. Click Choose File/Browse button below and pick the sample Excel file or another excel file.</span><br /><br />
+        <input type="file" id="input" onchange="handleFiles(this.files)" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /><span id="result" style="display: none; color: red"></span>
+        <br /><br />
+        <table id="grid1"></table>
+    </div>
+    <script>
+
+        function handleFiles(files) {
+            console.log(files);
+            var excelFile,
+                fileReader = new FileReader();
+
+            $("#result").hide();
+
+            fileReader.onload = function (e) {
+                var buffer = new Uint8Array(fileReader.result);
+                $.ig.excel.Workbook.load(buffer,
+                    function (workbook) {
+
+                        var column, row, newRow, cellValue, columnIndex, i,
+                            worksheet = workbook.worksheets(0),
+                            columnsNumber = 0,
+                            gridColumns = [],
+                            data = [];
+
+                        var image = "data:image/gif;base64,R0lGODlhUAAPAKIAAAsLav///88PD9WqsYmApmZmZtZfYmdakyH5BAQUAP8ALAAAAABQAA8AAAPbWLrc/jDKSVe4OOvNu/9gqARDSRBHegyGMahqO4R0bQcjIQ8E4BMCQc930JluyGRmdAAcdiigMLVrApTYWy5FKM1IQe+Mp+L4rphz+qIOBAUYeCY4p2tGrJZeH9y79mZsawFoaIRxF3JyiYxuHiMGb5KTkpFvZj4ZbYeCiXaOiKBwnxh4fnt9e3ktgZyHhrChinONs3cFAShFF2JhvCZlG5uchYNun5eedRxMAF15XEFRXgZWWdciuM8GCmdSQ84lLQfY5R14wDB5Lyon4ubwS7jx9NcV9/j5+g4JADs=";
+                        var imageShape = new $.ig.excel.WorksheetImage(image);
+                        imageShape.topLeftCornerCell(worksheet.getCell('C32'));
+                        imageShape.bottomRightCornerCell(worksheet.getCell('F33'));
+                        worksheet.shapes().add(imageShape);
+
+                        workbook.save({ type: 'blob' }, function (data) {
+                            saveAs(data, name);
+                        }, function (error) {
+                            alert('Error exporting: : ' + error);
+                        });
+
+                        // Both the columns and rows in the worksheet are lazily created and because of this most of the time worksheet.columns().count() will return 0
+                        // So to get the number of columns we read the values in the first row and count. When value is null we stop counting columns:
+                        while (worksheet.rows(0).getCellValue(columnsNumber)) {
+                            columnsNumber++;
+                        }
+
+                        // Iterating through cells in first row and use the cell text as key and header text for the grid columns
+                        for (columnIndex = 0; columnIndex < columnsNumber; columnIndex++) {
+                            column = worksheet.rows(0).getCellText(columnIndex);
+                            gridColumns.push({ headerText: column, key: column })
+                        }
+
+                        // We start iterating from 1, because we already read the first row to build the gridColumns array above
+                        // We use each cell value and add it to json array, which will be used as dataSource for the grid
+                        for (i = 1, length = worksheet.rows().count(); i < length; i++) {
+
+                            newRow = {};
+                            row = worksheet.rows(i);
+
+                            for (columnIndex = 0; columnIndex < columnsNumber; columnIndex++) {
+                                cellValue = row.getCellText(columnIndex);
+                                newRow[gridColumns[columnIndex].key] = cellValue;
+                            }
+
+                            data.push(newRow);
+                        }
+
+                        createGrid(data, gridColumns); // we can also skip passing the gridColumns use autoGenerateColumns = true, or modify the gridColumns array
+
+                    },
+                    function error(er) {
+                        $("#result").text(er.message() + " Please make sure you have selected a valid Excel File ('.xls, *.xlsx')");
+                        $("#result").show(1000);
+                    });
+            }
+            fileReader.readAsArrayBuffer(files[0]);
+            /*if (files.length > 0) {
+                excelFile = files[0];
+                if (excelFile.type === "application/vnd.ms-excel" || excelFile.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+                    fileReader.readAsArrayBuffer(excelFile);
+                } else {
+                    $("#result").text("The format of the file you have selected is not supported. Please select a valid Excel file ('.xls, *.xlsx').");
+                    $("#result").show(1000);
+                }
+            } */
+
+        };
+
+        function createGrid(data, gridColumns) {
+
+            if ($("#grid1").data("igGrid") !== undefined) {
+                $("#grid1").igGrid("destroy");
+            }
+
+            $("#grid1").igGrid({
+                columns: gridColumns,
+                autoGenerateColumns: true,
+                dataSource: data,
+                width: "100%",
+            });
+
+        };
+    </script>
+</body>
+</html>
