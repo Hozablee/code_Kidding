@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cmath>
 using namespace std;
 int main()
 {
@@ -10,7 +11,7 @@ int main()
     {
         cin >> arr[j];
     }
-    for(int k = 0;k<n*n;k++)
+    for(int k = 0;k<pow(2,n);k++)
     {
         if(k<n)
         {
