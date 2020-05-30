@@ -17,12 +17,12 @@ int main()
             {
                if(arr[i]+arr[j]+arr[k]==0)
                 {
-                    cout << arr[i] <<" " << arr[j] << " " << arr[k] << endl;
+                    cout << arr[i] <<"," << arr[j] << "," << arr[k] << endl;
                 }
-                k++;
-            }
-            j++;
-        }
 
+            }
+         arr[j]=arr[j+1];
+        }
+        arr[i]=arr[i+2];
     }
 }
