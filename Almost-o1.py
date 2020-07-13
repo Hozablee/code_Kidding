@@ -14,7 +14,7 @@ def jump(N):
       ans[3] = ans[4]
       ans[4] = a
     return(ans[4])
-if _name_ == "_main_":
+if __name__ == "_main_":
   N = int(input())
   if N < 4:
     print(1)
