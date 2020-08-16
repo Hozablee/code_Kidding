@@ -18,14 +18,13 @@ int main()
             {
                 if(arr[i]+arr[j]+arr[k] > maxs)
                 {
-                    maxs = max(arr[i],(arr[j],arr[k]));
+                    maxs += 1+max( (arr[i],arr[j]),(arr[j],arr[k]));
                 }
-                else
-                {
-                    return(0);
-                }
+                arr[k]=arr[k++];
             }
+            arr[j]=arr[j++];
         }
+        arr[i]=arr[i++];
     }
     cout << maxs;
 }
